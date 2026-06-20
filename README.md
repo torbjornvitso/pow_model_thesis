@@ -176,11 +176,21 @@ This code was developed as part of a master’s thesis investigating Proof-of-Wo
 
 The thesis studies how difficulty adjustment can be interpreted as a feedback controller that regulates the event-generation rate under changing computational power and stochastic event arrivals.
 
-## Citation
+Citation
 
-If you use this code in academic work, please cite the associated master's thesis:
+If you use this code in academic work, please cite the associated master’s thesis:
 
-T. Vitsø, "Proof-of-Work as a Self-Regulated Event-Generation Mechanism", Norwegian University of Science and Technology (NTNU), 2026.
+T. Vitsø, Proof-of-Work as a Self-Regulated Event-Generation Mechanism, Master’s thesis, Norwegian University of Science and Technology (NTNU), 2026.
+
+The simulation code is available at:
+
+https://github.com/torbjornvitso/pow_model_thesis
+
+If you use this code in academic work, please cite:
+
+T. Vitsø, Proof-of-Work Feedback Simulation Code, GitHub repository, 2026. Available: https://github.com/torbjornvitso/pow_model_thesis
+
+Please also cite the associated master’s thesis when referencing the scientific results obtained using this code.
 
 ## License
 
