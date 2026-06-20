@@ -188,9 +188,9 @@ https://github.com/torbjornvitso/pow_model_thesis
 
 If you use this code in academic work, please cite:
 
-T. Vitsø, Proof-of-Work Feedback Simulation Code, GitHub repository, 2026. Available: https://github.com/torbjornvitso/pow_model_thesis
+T. Vitsø, *Proof-of-Work as a Self-Regulated Event-Generation Mechanism: Simulation Code*, GitHub repository, 2026. Available: https://github.com/torbjornvitso/pow_model_thesis
 
-Please also cite the associated master’s thesis when referencing the scientific results obtained using this code.
+Please also cite the associated master's thesis when referencing the scientific results.
 
 ## License
 
