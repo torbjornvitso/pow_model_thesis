@@ -17,7 +17,6 @@ def pre_process_data(from_height: int | None = None, to_height: int | None = Non
             h = int(row["height"])
             if from_height <= h <= to_height:
                 ts_sec = int(row["time"])
-                # ts_sec = ts_ms / 1000
                 d = float(row["difficulty"])
 
                 heights.append(h)
@@ -48,55 +47,18 @@ def pre_process_data(from_height: int | None = None, to_height: int | None = Non
 
             writer.writerow([b1, b2, t1, t2, delta_t_min, d])
 
-    total_t = 0.0
+    WINDOW = 2016
 
-    first_block_height_in_kth_adjustment_list = []
-    last_block_height_in_kth_adjustment_list = []
-    total_t_list = []
-    avg_t_list = []
-    block_difficulty_list = []
-    last_difficulty = None
-
-    def last_window(lb: int, t: int, c: int):
-        last_block_height_in_kth_adjustment_list.append(lb)
-        total_t_list.append(t)
-        avg_t_list.append(t / c)
-        return
-
-    with open(NODE_MID_PROCESSED_DATA, "r") as f:
+    rows = []
+    with open(NODE_MID_PROCESSED_DATA, "r", newline="") as f:
         reader = csv.DictReader(f)
-        counter = 0
-        pre_last_block = 0
-
         for row in reader:
-            difficulty = float(row["difficulty"])
+            rows.append(row)
 
-            if counter == 0:
-                last_difficulty = difficulty
-                block_difficulty_list.append(difficulty)
-                first_block_height_in_kth_adjustment_list.append(
-                    int(row["block_height_i"])
-                )
+    num_windows = len(rows) // WINDOW
+    rows = rows[: num_windows * WINDOW]
 
-            counter += 1
-
-            if difficulty != last_difficulty:
-                last_block_height_in_kth_adjustment_list.append(
-                    int(row["block_height_i"])
-                )
-                total_t_list.append(total_t)
-                avg_t_list.append(total_t / counter)
-                last_difficulty = difficulty
-                total_t = 0
-                counter = 0
-
-            total_t += float(row["delta_t_min"])
-            pre_last_block = int(row["block_height_i_plus_1"])
-
-        if counter != 0:
-            last_window(pre_last_block, total_t, counter)
-
-    with open(NODE_PROCESSED_DATA, "w") as f:
+    with open(NODE_PROCESSED_DATA, "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(
             [
@@ -111,31 +73,43 @@ def pre_process_data(from_height: int | None = None, to_height: int | None = Non
                 "expected_event_interval",
             ]
         )
-        previous_hash_rate_est = 0
-        hash_rate_growth = 0
-        expected_event_interval = 600
 
-        for i in range(len(block_difficulty_list)):
-            first_block = first_block_height_in_kth_adjustment_list[i]
-            last_block = last_block_height_in_kth_adjustment_list[i]
-            total_time = total_t_list[i]
-            avg_time_min = avg_t_list[i]
-            avg_time_sec = avg_t_list[i] * 60
-            d = block_difficulty_list[i]
+        previous_hash_rate_est = 0.0
+
+        for k in range(num_windows):
+            window = rows[k * WINDOW : (k + 1) * WINDOW]
+
+            first_block = int(window[0]["block_height_i"])
+            last_block = int(window[-1]["block_height_i_plus_1"])
+
+            delta_t_list = [float(r["delta_t_min"]) for r in window]
+            total_time_min = sum(delta_t_list)
+            avg_time_min = total_time_min / WINDOW
+            avg_time_sec = avg_time_min * 60
+
+            d = float(window[0]["difficulty"])
+
             hash_est = d * 2**32 / avg_time_sec
+
+            hash_rate_growth = 0.0
+            expected_event_interval = 600.0
+
             if previous_hash_rate_est != 0:
                 hash_rate_growth = np.log(hash_est / previous_hash_rate_est)
-                expected_event_interval = (
-                    avg_t_list[i - 1]
-                    * 60
-                    * ((1 - np.e ** (-hash_rate_growth)) / (hash_rate_growth))
-                )
+                if hash_rate_growth != 0:
+                    expected_event_interval = (
+                        avg_time_sec
+                        * (1 - np.exp(-hash_rate_growth))
+                        / hash_rate_growth
+                    )
+
             previous_hash_rate_est = hash_est
+
             writer.writerow(
                 [
                     first_block,
                     last_block,
-                    total_time,
+                    total_time_min,
                     avg_time_min,
                     avg_time_sec,
                     d,

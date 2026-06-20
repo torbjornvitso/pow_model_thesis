@@ -30,7 +30,7 @@ def read_dataset_btc(
             exp_e_t.append(float(row["expected_event_interval"]))
 
 
-def read_dataset_eth(path: str, h_k: list, d_k: list, t_total: list):
+def read_dataset_eth(path: str, h_k: list, d_k: list, t_total: list, u_k: list):
 
     with open(path, "r", newline="") as f:
         reader = csv.DictReader(f)
@@ -39,6 +39,7 @@ def read_dataset_eth(path: str, h_k: list, d_k: list, t_total: list):
             h_k.append(float(row["estimated_hash_rate"]))
             d_k.append(float(row["block_difficulty"]))
             t_total.append(int(row["delta_t_sec"]))
+            u_k.append(float(row["correction_term"]))
 
 
 def read_dataset_shock_test(path: str, h_k: list, d_k: list):
