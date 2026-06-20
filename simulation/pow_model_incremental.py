@@ -9,13 +9,13 @@ from pow_functions import (
     quantized_timing_index,
     quantized_correction_map,
     difficulty_adjustment_update_eth,
-    difficulty_bomb,
     low_pass_filter,
 )
 
 h_real_data = []
 d_real_data = []
 t_real_data = []
+u_k_real_data = []
 
 h_sim_data = []
 d_sim_data = []
@@ -40,7 +40,9 @@ def pow_feedback_mechanism_incremental_bounded_proportional_controller(
 ):
     pre_process_data_eth(from_blockheight, to_blockheight)
 
-    read_dataset_eth(processed_data_path, h_real_data, d_real_data, t_real_data)
+    read_dataset_eth(
+        processed_data_path, h_real_data, d_real_data, t_real_data, u_k_real_data
+    )
 
     d_0 = d_real_data[0]
     t_0 = 0
@@ -51,7 +53,6 @@ def pow_feedback_mechanism_incremental_bounded_proportional_controller(
     k = 1
 
     for h_k in h_real_data:
-        block_number = from_blockheight + k
         h_sim_data.append(h_k)
         d_sim_data.append(d_k)
 
@@ -63,7 +64,6 @@ def pow_feedback_mechanism_incremental_bounded_proportional_controller(
         e_k = quantized_timing_index(T_obs_k, phi)
         u_k = quantized_correction_map(e_k, u_min, u_max)
         d_k_plus_one = difficulty_adjustment_update_eth(d_k, u_k)
-        # d_k_plus_one += difficulty_bomb(block_number, 9700000)
 
         d_k = d_k_plus_one
         t_i = t_i_k[-1]
@@ -89,4 +89,4 @@ def pow_feedback_mechanism_incremental_bounded_proportional_controller(
         u_k_sim_data,
     )
 
-    eth_plot_sim_data(13, processed_data_path, sim_data_path)
+    eth_plot_sim_data(processed_data_path, sim_data_path)

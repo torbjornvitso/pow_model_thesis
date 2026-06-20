@@ -2,7 +2,6 @@ from .average_mechanism import low_pass_filter
 from .difficulty_adjustment import (
     difficulty_adjustment_update_btc,
     difficulty_adjustment_update_eth,
-    difficulty_bomb,
 )
 from .controllers import bounded_correction_map, quantized_correction_map
 from .inter_event_times import (

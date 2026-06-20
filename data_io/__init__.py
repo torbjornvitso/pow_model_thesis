@@ -1,5 +1,4 @@
 from .paths import (
-    KAGGLE_PROCESSED_DATA,
     NODE_PROCESSED_DATA,
     NODE_DATA,
     ETH_DATA,
@@ -16,7 +15,6 @@ from .read_sim_data import read_sim_data
 from .write_sim_data import write_sim_data
 
 __all__ = [
-    "KAGGLE_PROCESSED_DATA",
     "NODE_PROCESSED_DATA",
     "NODE_DATA",
     "ETH_DATA",

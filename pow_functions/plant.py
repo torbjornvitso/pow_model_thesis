@@ -20,4 +20,3 @@ def timestamps(lambda_k: float, N: int, t_0: float):
     dt = np.random.exponential(scale=(1 / lambda_k), size=N)
     t_i = t_0 + np.cumsum(dt)
     return t_i
-    # return np.floor(t_i).astype(int)

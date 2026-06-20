@@ -1,4 +1,5 @@
 import csv
+import numpy as np
 
 from data_io import ETH_DATA, ETH_MID_PROCESSED_DATA, ETH_PROCESSED_DATA
 
@@ -95,6 +96,8 @@ def pre_process_data_eth(from_height: int | None = None, to_height: int | None =
                 "t_i_plus_1",
                 "delta_t_sec",
                 "avg_t_sec",
+                "quantized_timing",
+                "correction_term",
                 "block_difficulty",
                 "estimated_hash_rate",
             ]
@@ -107,9 +110,15 @@ def pre_process_data_eth(from_height: int | None = None, to_height: int | None =
             t2 = timestamps[i + 1]
 
             delta_t_sec = t2 - t1
+
+            e_k = np.floor(delta_t_sec / 10)
+            u_k = np.maximum(1 - e_k, -99)
+
             d = difficulties[i + 1]
 
             est_h_r = estimated_hash_rate[i // 2048]
             avg_time_window = avg_time[i // 2048]
 
-            writer.writerow([b1, b2, t1, t2, delta_t_sec, avg_time_window, d, est_h_r])
+            writer.writerow(
+                [b1, b2, t1, t2, delta_t_sec, avg_time_window, e_k, u_k, d, est_h_r]
+            )
