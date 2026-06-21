@@ -13,7 +13,6 @@ def plot_expected_hash_growth():
     for sigma in global_hash_growth_list:
         expected_event_interval = t_ref * ((1 - np.exp(-sigma * t)) / (sigma * t))
         expected_event_interval_list.append(expected_event_interval)
-        print(expected_event_interval)
 
     fig, ax = plt.subplots(figsize=(8, 5))
 

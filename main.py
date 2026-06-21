@@ -3,6 +3,12 @@ from simulation import (
     pow_feedback_mechanism_incremental_bounded_proportional_controller,
 )
 
+from plots import (
+    plot_real_inter_events,
+    plot_windowed_inter_events,
+    plot_real_windowed_dynamics,
+)
+
 from data_io import SIM_RESULTS_BTC, NODE_PROCESSED_DATA
 from data_io import ETH_PROCESSED_DATA, SIM_RESULTS_ETH
 
@@ -12,7 +18,7 @@ def main():
 
     ## BTC design choices ##
 
-    N = 2016  # Number of events before adjustment update
+    N = 10  # Number of events before adjustment update
     T_ref = 600  # Reference inter-event time
     e_min = 0.25  # Lower bound error ratio
     e_max = 4  # Upper bound error ratio
@@ -35,6 +41,12 @@ def main():
         from_blockheight,
         to_blockheight,
     )
+
+    # ## BTC real data validation ##
+
+    plot_real_inter_events()
+    plot_windowed_inter_events()
+    plot_real_windowed_dynamics()
 
     ## ETH design choices ##
 

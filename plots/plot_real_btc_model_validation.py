@@ -34,7 +34,7 @@ def plot_real_inter_events():
     ax.legend(frameon=False)
 
     fig.tight_layout()
-    plt.savefig("figure2.png", dpi=300)
+    plt.savefig("inter_event_time_distribution_btc.png", dpi=300)
     plt.show()
 
 
@@ -67,7 +67,7 @@ def plot_windowed_inter_events():
     ax.legend(frameon=False)
 
     fig.tight_layout()
-    plt.savefig("figure_windowed.png", dpi=300)
+    plt.savefig("averaged_inter_event_time_distribution_btc.png", dpi=300)
     plt.show()
 
 
@@ -118,7 +118,7 @@ def plot_real_windowed_dynamics():
     ax.legend(frameon=False, loc="upper left")
 
     fig.tight_layout()
-    plt.savefig("figure_windowed_dynamics_real.png", dpi=300)
+    plt.savefig("evolution_of_averaged_inter_event_time.png", dpi=300)
     plt.show()
 
 
