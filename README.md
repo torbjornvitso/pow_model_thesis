@@ -2,7 +2,7 @@ Proof-of-Work Feedback Simulation Code
 
 This repository contains the simulation code used for the master’s thesis on Proof-of-Work as a feedback-regulated event-generation mechanism.
 
-The code models and simulates difficulty-adjustment mechanisms inspired by Bitcoin and Ethereum Homestead. The main purpose is to study how Proof-of-Work systems regulate event generation under stochastic block arrivals, changing hash-rate, and feedback-based difficulty adjustment.
+The code models and simulates difficulty-adjustment mechanisms inspired by Bitcoin and Ethereum Homestead. The main purpose is to study how Proof-of-Work systems regulate event generation under stochastic event arrivals, changing hash-rate, and feedback-based difficulty adjustment.
 
 Project overview
 
@@ -20,151 +20,49 @@ Main files
 
 main.py
 
-Runs the main Bitcoin and Ethereum simulations.
-
-The Bitcoin simulation uses a windowed bounded proportional controller with:
-
-* Window size N = 2016
-* Reference inter-event time T_ref = 600 seconds
-* Difficulty adjustment bounds corresponding to Bitcoin’s adjustment limits
-
-The Ethereum Homestead simulation uses an incremental bounded proportional controller with:
-
-* Window size N = 1
-* Quantized timing index phi = 10
-* Correction term bounds u_min = -99, u_max = 1
-
-Run with:
-
-python main.py
-
-Implements the Bitcoin-inspired windowed feedback mechanism.
-
-The model:
-
-1. Reads pre-processed Bitcoin hash-rate and difficulty data.
-2. Computes the probability of success from difficulty.
-3. Simulates stochastic timestamps from the event rate.
-4. Computes observed inter-event times.
-5. Applies a bounded correction map.
-6. Updates difficulty according to a Bitcoin-style adjustment rule.
-7. Writes simulation results and generates plots.
-
-pow_model_incremental.py
-
-Implements the Ethereum Homestead-inspired incremental difficulty mechanism.
-
-The model:
-
-1. Reads pre-processed Ethereum Homestead data.
-2. Computes stochastic event generation from hash-rate and difficulty.
-3. Estimates observed inter-event time.
-4. Applies the quantized Ethereum timing correction.
-5. Updates difficulty recursively.
-6. Writes simulation results and generates plots.
+Runs the main Bitcoin and Ethereum validation-simulations with generalized parameter settings. Running different simulations with different parameters is therefore easy. 
 
 validation_of_average_mechanism.py
 
 Tests how the averaging window size affects the observed inter-event time.
 
-This script compares different window sizes:
-
-N_list = [10, 20, 50, 100, 500, 1500, 2016]
-
-and generates:
-
-validation_of_average_mechanism.png
-
 validation_of_control_properties_btc.py
 
 Runs a Bitcoin-style hash-rate shock test.
 
-This is used to validate the control properties of the windowed Bitcoin-inspired difficulty-adjustment mechanism.
+This is used to validate the control properties of the windowed Bitcoin-inspired difficulty-adjustment mechanism. Also implemented with generalized shocks, different simulations with different shocks is therefore easy. 
 
 pow_model_monte_carlo_shock_test.py
 
-Runs Monte Carlo simulations for the Ethereum Homestead-inspired mechanism under a hash-rate shock.
-
-The script generates plots for:
-
-* Mean difficulty response
-* Difficulty percentile band
-* Correction term response
-* Inter-event time response
-* Mean recovery under hash-rate shock
-
-The main simulation is run with:
-
-python pow_model_monte_carlo_shock_test.py
-
-plot_real_btc_model_validation.py
-
-Generates validation plots based on real Bitcoin data.
-
-The script produces:
-
-* Real Bitcoin inter-event time distribution
-* Windowed averaged inter-event time distribution
-* Evolution of averaged inter-event time over adjustment windows
-
-Run with:
-
-python plot_real_btc_model_validation.py
+Runs Monte Carlo simulations for the Ethereum Homestead-inspired mechanism under a hash-rate shock. Also implemented with generalized shocks, different simulations with different shocks is therefore easy. 
 
 plot_bias_under_exp_hashrate_growth.py
 
 Plots the analytical bias in averaged inter-event time under exponential hash-rate growth.
 
-Run with:
-
-python plot_bias_under_exp_hashrate_growth.py
-
-Dependencies
-
-The code mainly depends on:
-
-numpy
-pandas
-matplotlib
 
 Install dependencies with:
 
-pip install -r requirements.txt
+requirements.txt
 
 Data availability
 
-The repository contains both real blockchain datasets and synthetically generated datasets used throughout the thesis.
+The repository contains both real blockchain datasets and generated datasets used for experimental studies.
 
-Real Bitcoin and Ethereum datasets are pre-processed before simulation using the scripts defined in `data_pre_process.py`.
-
-Data
-
-The simulations use pre-processed Bitcoin and Ethereum data files defined in data_io.py.
-
-Typical data paths include:
-
-* Bitcoin node data
-* Ethereum Homestead data
-* Generated hash-rate shock data
-* Simulation result files
-
-Some scripts generate synthetic shock-test data before running the simulations.
+Real Bitcoin and Ethereum datasets are pre-processed before simulation using the scripts defined in `data_pre_process`.
 
 Reproducing results
 
-To reproduce the main thesis simulations, run:
+To reproduce the model validation simulations, run:
 
-python main.py
+main.py
 
-To reproduce individual validation figures, run the corresponding plotting or validation script:
+To reproduce closed-loop dynamics , run following scripts:
 
-python validation_of_average_mechanism.py
-python validation_of_control_properties_btc.py
-python pow_model_monte_carlo_shock_test.py
-python plot_real_btc_model_validation.py
-python plot_bias_under_exp_hashrate_growth.py
-
-Generated figures are saved as .png files in the working directory unless otherwise specified in the script.
+validation_of_average_mechanism.py
+validation_of_control_properties_btc.py
+pow_model_monte_carlo_shock_test.py
+plot_bias_under_exp_hashrate_growth.py
 
 Reproducibility note
 
@@ -172,7 +70,7 @@ Several simulations rely on stochastic event generation. Exact numerical results
 
 Thesis context
 
-This code was developed as part of a master’s thesis investigating Proof-of-Work as a feedback-regulated event-generation mechanism.
+This code was developed as part of a master’s thesis investigating Proof-of-Work as a self-regulated event-generation mechanism.
 
 The thesis studies how difficulty adjustment can be interpreted as a feedback controller that regulates the event-generation rate under changing computational power and stochastic event arrivals.
 
